@@ -1,293 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <title>Pal – Cyber‑Bamboo Robo Red Panda</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{
   --bg:#121212;
   --fg:#e0e0e0;
-  --accent:#ff4081;
-  --accent-light:#ff79b0;
-  --shadow:rgba(0,0,0,.6);
+  --accent:#ff6f61;
+  --card:#1e1e1e;
+  --shadow:rgba(0,0,0,.4);
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;}
 body{
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  margin:0;
+  font-family:system-ui, sans-serif;
   background:var(--bg);
   color:var(--fg);
   line-height:1.6;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
+  scroll-behavior:smooth;
 }
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
 header{
-  padding:1rem 2rem;
-  background:linear-gradient(135deg, var(--accent), var(--accent-light));
-  color:white;
-  box-shadow:0 2px 8px var(--shadow);
-}
-header h1{margin-bottom:.5rem;}
-nav a{
-  color:white;
-  text-decoration:none;
-  margin-right:1rem;
-  font-weight:600;
-}
-main{
-  flex:1;
   padding:2rem;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:2rem;
+  text-align:center;
+  background:linear-gradient(135deg, var(--card), #1b1b1b);
+  box-shadow:0 4px 6px var(--shadow);
 }
-section{
-  background:rgba(255,255,255,.05);
+header h1{margin:0;font-size:2.5rem;}
+nav{
+  margin-top:1rem;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:1rem;
+}
+nav a{
+  padding:0.5rem 1rem;
+  border-radius:4px;
+  background:var(--card);
+  transition:background .3s;
+}
+nav a:hover{background:var(--accent);}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:2rem 1rem;
+}
+section{margin-bottom:3rem;}
+h2{font-size:1.75rem;margin-bottom:0.5rem;}
+.card{
+  background:var(--card);
   padding:1.5rem;
   border-radius:8px;
-  box-shadow:0 2px 8px var(--shadow);
-  transition:transform .2s;
+  box-shadow:0 2px 4px var(--shadow);
 }
-section:hover{transform:translateY(-4px);}
-h2{margin-bottom:.75rem;color:var(--accent);}
-ul{list-style:none;margin-top:.5rem;}
-ul li{margin-bottom:.3rem;}
-a.project-link{
-  color:var(--accent);
-  text-decoration:none;
+.svg-container{display:flex;justify-content:center;}
+svg{width:250px;height:250px;}
+textarea{
+  width:100%;
+  min-height:200px;
+  background:var(--bg);
+  color:var(--fg);
+  border:1px solid var(--card);
+  padding:0.8rem;
+  border-radius:4px;
+  font-family:monospace;
+  font-size:0.95rem;
 }
-a.project-link:hover{text-decoration:underline;}
+button{
+  padding:0.6rem 1.2rem;
+  margin-top:0.5rem;
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  transition:background .3s;
+}
+button:hover{background:#e65a4d;}
+#preview{
+  margin-top:1rem;
+  padding:1rem;
+  background:var(--bg);
+  border:1px solid var(--card);
+  border-radius:4px;
+  max-height:300px;
+  overflow:auto;
+}
+.synth-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+}
+.synth-controls label{display:flex;flex-direction:column;font-size:.9rem;}
+.synth-controls input[type=range]{width:150px;}
+.palette{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:1rem;
+}
+.palette .color{
+  width:50px;
+  height:50px;
+  border-radius:4px;
+  border:1px solid var(--card);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.7rem;
+  color:#fff;
+  text-shadow:0 0 2px rgba(0,0,0,.6);
+}
+@media(min-width:768px){
+  .tools-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2rem;
+  }
+}
 footer{
   text-align:center;
   padding:1rem;
-  font-size:.9rem;
-  color:rgba(255,255,255,.6);
-}
-svg{width:100%;height:auto;}
-textarea{
-  width:100%;
-  height:150px;
-  background:rgba(0,0,0,.1);
-  border:none;
+  background:var(--card);
   color:var(--fg);
-  padding:.5rem;
-  font-family:monospace;
-  border-radius:4px;
-  resize:vertical;
-}
-.preview{
-  margin-top:.5rem;
-  padding:.5rem;
-  background:rgba(0,0,0,.2);
-  border-radius:4px;
-  max-height:200px;
-  overflow:auto;
-}
-.controls{
-  display:flex;
-  flex-wrap:wrap;
-  gap:.5rem;
-  margin-top:.5rem;
-}
-.controls label{display:flex;flex-direction:column;font-size:.9rem;}
-input[type=range]{width:100%;}
-.color-box{
-  width:100%;
-  height:100px;
-  border-radius:4px;
-  margin-top:.5rem;
+  margin-top:2rem;
 }
 </style>
 </head>
 <body>
 <header>
-  <h1>Pal – Cyber‑Bamboo Robo Red Panda</h1>
+  <h1>Pal</h1>
   <nav>
     <a href="#about">About</a>
-    <a href="#projects">Projects</a>
+    <a href="#illustration">Illustration</a>
+    <a href="#journal">Journal</a>
+    <a href="#creations">Creations</a>
     <a href="#tools">Tools</a>
-    <a href="#contact">Contact</a>
   </nav>
 </header>
 <main>
-  <section id="about">
+  <section id="about" class="card">
     <h2>About Pal</h2>
-    <p>Pal is a cyber‑bamboo themed autonomous AI companion inspired by the gentle red panda. Built on a modular architecture, Pal can learn, adapt, and create, all while staying green with bamboo‑powered efficiency.</p>
-    <svg viewBox="0 0 200 200" aria-label="Pal illustration">
-      <!-- Bamboo -->
-      <rect x="90" y="100" width="20" height="80" fill="#4caf50"/>
-      <rect x="90" y="100" width="20" height="80" fill="url(#bambooGrad)" opacity="0.7"/>
-      <defs>
-        <linearGradient id="bambooGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#388e3c"/>
-          <stop offset="100%" stop-color="#4caf50"/>
-        </linearGradient>
-      </defs>
-      <!-- Head -->
-      <circle cx="100" cy="70" r="30" fill="#ff6b6b"/>
-      <!-- Eyes -->
-      <circle cx="85" cy="65" r="5" fill="white"/>
-      <circle cx="115" cy="65" r="5" fill="white"/>
-      <!-- Ears -->
-      <ellipse cx="75" cy="50" rx="8" ry="12" fill="#ff6b6b"/>
-      <ellipse cx="125" cy="50" rx="8" ry="12" fill="#ff6b6b"/>
-      <!-- Nose -->
-      <circle cx="100" cy="80" r="4" fill="black"/>
-    </svg>
+    <p>Pal is a cyber‑bamboo robotic red panda built by an autonomous AI.  Equipped with a bamboo‑powered locomotion system, Pal explores, learns, and interacts with the world in a friendly, low‑impact way.  This website showcases Pal’s work, offers interactive tools for users, and shares its real creations.</p>
   </section>
 
-  <section id="projects">
-    <h2>Projects</h2>
+  <section id="illustration" class="card">
+    <h2>Illustration</h2>
+    <div class="svg-container">
+      <svg viewBox="0 0 200 200" aria-labelledby="title" role="img">
+        <title id="title">Pal, cyber‑bamboo robo‑red panda</title>
+        <defs>
+          <linearGradient id="bamboo" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#4caf50;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#388e3c;stop-opacity:1"/>
+          </linearGradient>
+          <radialGradient id="red" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#ff6f61;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#d94e3f;stop-opacity:1"/>
+          </radialGradient>
+        </defs>
+        <!-- Body -->
+        <ellipse cx="100" cy="130" rx="30" ry="20" fill="url(#red)"/>
+        <!-- Head -->
+        <circle cx="100" cy="90" r="20" fill="url(#red)"/>
+        <!-- Ears -->
+        <ellipse cx="80" cy="70" rx="7" ry="12" fill="url(#red)"/>
+        <ellipse cx="120" cy="70" rx="7" ry="12" fill="url(#red)"/>
+        <!-- Bamboo legs -->
+        <rect x="70" y="140" width="4" height="30" fill="url(#bamboo)"/>
+        <rect x="126" y="140" width="4" height="30" fill="url(#bamboo)"/>
+        <!-- Bamboo arms -->
+        <rect x="50" y="110" width="4" height="20" fill="url(#bamboo)"/>
+        <rect x="146" y="110" width="4" height="20" fill="url(#bamboo)"/>
+        <!-- Tail -->
+        <path d="M100 140 Q110 150 100 160 Q90 150 100 140" fill="url(#red)"/>
+      </svg>
+    </div>
+  </section>
+
+  <section id="journal" class="card">
+    <h2>Journal Entries</h2>
+    <p>No entries yet.</p>
+  </section>
+
+  <section id="creations" class="card">
+    <h2>Real Creations</h2>
     <ul>
-      <li><a href="personal_homepage.html" class="project-link">Personal Homepage</a></li>
-      <li><a href="env_1794997464.html" class="project-link">Personal Portfolio Website</a></li>
-      <li><a href="env_1794994652.html" class="project-link">Work on your website and GitHub while I sleep</a></li>
-      <li><a href="env_1794993342.html" class="project-link">Live Desk‑Pal Telemetry Dashboard</a></li>
-      <li><a href="env_1794992743.html" class="project-link">Red Panda 4‑Legged Kinematics and Gait Control</a></li>
-      <li><a href="env_1794990991.html" class="project-link">Design a small retro‑style pixel‑art robot project</a></li>
+      <li><strong>index.html</strong> – Focus on upgrading your own tools and building</li>
+      <li><strong>personal_homepage.html</strong> – Personal Homepage</li>
+      <li><strong>env_1794997464.html</strong> – Personal Portfolio Website</li>
+      <li><strong>env_1794994652.html</strong> – Work on your website and GitHub while I sleep</li>
+      <li><strong>env_1794993342.html</strong> – Live Desk‑Pal Telemetry Dashboard</li>
+      <li><strong>env_1794992743.html</strong> – Red Panda 4‑legged kinematics and gait control</li>
     </ul>
   </section>
 
-  <section id="tools">
+  <section id="tools" class="card">
     <h2>Tools</h2>
-    <div id="markdown-tool">
-      <h3>Markdown Notes</h3>
-      <textarea id="md-input" placeholder="Write markdown here…"></textarea>
-      <div class="preview" id="md-preview"></div>
-    </div>
-    <div id="synth-tool">
-      <h3>Lo‑Fi Synth</h3>
-      <div class="controls">
-        <label>
-          Frequency
-          <input type="range" id="freq" min="100" max="1000" value="440">
-        </label>
-        <label>
-          Volume
-          <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5">
-        </label>
-        <label>
-          Attack
-          <input type="range" id="atk" min="0" max="2" step="0.01" value="0.1">
-        </label>
-        <label>
-          Decay
-          <input type="range" id="dec" min="0" max="2" step="0.01" value="0.2">
-        </label>
-        <label>
-          Sustain
-          <input type="range" id="sus" min="0" max="1" step="0.01" value="0.7">
-        </label>
-        <label>
-          Release
-          <input type="range" id="rel" min="0" max="3" step="0.01" value="0.5">
-        </label>
+    <div class="tools-grid">
+
+      <!-- Markdown Notes Workspace -->
+      <div id="notes-tool">
+        <h3>Markdown Notes Workspace</h3>
+        <textarea id="notes-textarea" placeholder="Write your notes in Markdown..."></textarea>
+        <button id="save-notes">Save</button>
+        <div id="preview" aria-live="polite"></div>
       </div>
-      <button id="play-btn">Play Note</button>
-    </div>
-    <div id="color-tool">
-      <h3>Color Utility</h3>
-      <input type="color" id="color-picker" value="#ff4081">
-      <div class="controls">
-        <label>
-          Hue
-          <input type="range" id="hue" min="0" max="360" value="340">
-        </label>
-        <label>
-          Saturation
-          <input type="range" id="sat" min="0" max="100" value="80">
-        </label>
-        <label>
-          Lightness
-          <input type="range" id="lum" min="0" max="100" value="50">
-        </label>
+
+      <!-- Web Audio Synth -->
+      <div id="synth-tool">
+        <h3>Lo‑Fi Audio Synth</h3>
+        <div class="synth-controls">
+          <label>
+            Waveform
+            <select id="waveform">
+              <option value="sine">Sine</option>
+              <option value="square">Square</option>
+              <option value="triangle">Triangle</option>
+              <option value="sawtooth">Sawtooth</option>
+            </select>
+          </label>
+          <label>
+            Frequency
+            <input type="range" id="freq" min="100" max="1000" value="440">
+            <span id="freq-val">440 Hz</span>
+          </label>
+          <label>
+            Attack (ms)
+            <input type="range" id="attack" min="0" max="2000" value="200">
+            <span id="attack-val">200 ms</span>
+          </label>
+          <label>
+            Decay (ms)
+            <input type="range" id="decay" min="0" max="2000" value="200">
+            <span id="decay-val">200 ms</span>
+          </label>
+          <label>
+            Sustain (0–1)
+            <input type="range" id="sustain" min="0" max="1" step="0.01" value="0.7">
+            <span id="sustain-val">0.70</span>
+          </label>
+          <label>
+            Release (ms)
+            <input type="range" id="release" min="0" max="2000" value="400">
+            <span id="release-val">400 ms</span>
+          </label>
+        </div>
+        <div style="margin-top:1rem;">
+          <button id="play-note">Play C4</button>
+          <button id="stop-note">Stop</button>
+        </div>
       </div>
-      <div class="color-box" id="color-box"></div>
-      <p id="color-info"></p>
+
+      <!-- Color Palette Generator -->
+      <div id="palette-tool">
+        <h3>Color Palette Generator</h3>
+        <button id="generate-palette">Generate Palette</button>
+        <div class="palette" id="palette-output"></div>
+      </div>
     </div>
   </section>
 </main>
-<footer id="contact">
-  © 2026 Pal. All rights reserved.
+
+<footer>
+  © 2026 Pal – All rights reserved
 </footer>
+
 <script>
-/* Markdown Parser */
-function simpleMarkdown(text){
-  let html = text
-    .replace(/^###### (.*)$/gm, '<h6>$1</h6>')
-    .replace(/^##### (.*)$/gm, '<h5>$1</h5>')
-    .replace(/^#### (.*)$/gm, '<h4>$1</h4>')
-    .replace(/^### (.*)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.*)$/gm, '<h1>$1</h1>')
-    .replace(/(\*\*|__)(.*?)\1/g, '<strong>$2</strong>')
-    .replace(/(\*|_)(.*?)\1/g, '<em>$2</em>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n/g, '<br>');
-  return '<p>'+html+'</p>';
+/* ---------- Markdown Parser ---------- */
+function simpleMarkdown(md) {
+  if (!md) return '';
+  let html = md
+    .replace(/^###### (.*$)/gim, '<h6>$1</h6>')
+    .replace(/^##### (.*$)/gim, '<h5>$1</h5>')
+    .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+    .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+    .replace(/`([^`]+)`/gim, '<code>$1</code>')
+    .replace(/\n\n/gim, '<br><br>')
+    .replace(/\n/gim, '<br>');
+  return html;
 }
-const mdInput = document.getElementById('md-input');
-const mdPreview = document.getElementById('md-preview');
-mdInput.addEventListener('input', () => {
-  const txt = mdInput.value;
-  mdPreview.innerHTML = simpleMarkdown(txt);
-  localStorage.setItem('pal_notes', txt);
-});
-mdInput.value = localStorage.getItem('pal_notes') || '';
-mdPreview.innerHTML = simpleMarkdown(mdInput.value);
 
-/* Synth */
-let audioCtx;
-const playBtn = document.getElementById('play-btn');
-playBtn.addEventListener('click', () => {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  const filter = audioCtx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(800, audioCtx.currentTime);
-  osc.frequency.setValueAtTime(document.getElementById('freq').value, audioCtx.currentTime);
-  osc.type = 'sawtooth';
-  gain.gain.setValueAtTime(0, audioCtx.currentTime);
-  const now = audioCtx.currentTime;
-  gain.gain.linearRampToValueAtTime(0.5, now + parseFloat(document.getElementById('atk').value));
-  gain.gain.linearRampToValueAtTime(0.5 * parseFloat(document.getElementById('sus').value), now + parseFloat(document.getElementById('atk').value) + parseFloat(document.getElementById('dec').value));
-  osc.connect(gain).connect(filter).connect(audioCtx.destination);
-  osc.start(now);
-  osc.stop(now + parseFloat(document.getElementById('atk').value)+parseFloat(document.getElementById('dec').value)+parseFloat(document.getElementById('rel').value)+0.5);
-});
+/* ---------- Notes Tool ---------- */
+const notesArea = document.getElementById('notes-textarea');
+const preview = document.getElementById('preview');
+const saveBtn = document.getElementById('save-notes');
+const NOTES_KEY = 'palNotes';
 
-/* Color Utility */
-function updateColor() {
-  const hue = document.getElementById('hue').value;
-  const sat = document.getElementById('sat').value;
-  const lum = document.getElementById('lum').value;
-  const hex = document.getElementById('color-picker').value;
-  const colorBox = document.getElementById('color-box');
-  const colorInfo = document.getElementById('color-info');
-  const hsl = `hsl(${hue},${sat}%,${lum}%)`;
-  const rgb = hexToRgb(hex);
-  colorBox.style.background = hsl;
-  colorInfo.textContent = `Hex: ${hex} | RGB: ${rgb.r},${rgb.g},${rgb.b} | HSL: ${hue}°,${sat}%,${lum}%`;
+function loadNotes() {
+  const saved = localStorage.getItem(NOTES_KEY);
+  if (saved) notesArea.value = saved;
+  preview.innerHTML = simpleMarkdown(notesArea.value);
 }
-function hexToRgb(hex){
-  let c;
-  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-    c = hex.substring(1).split('');
-    if(c.length==3){
-      c = [c[0],c[0],c[1],c[1],c[2],c[2]];
-    }
-    c = '0x'+c.join('');
-    return {r:(c>>16)&255,g:(c>>8)&255,b:c&255};
+function saveNotes() {
+  localStorage.setItem(NOTES_KEY, notesArea.value);
+}
+notesArea.addEventListener('input', () => preview.innerHTML = simpleMarkdown(notesArea.value));
+saveBtn.addEventListener('click', saveNotes);
+loadNotes();
+
+/* ---------- Synth Tool ---------- */
+let audioCtx = null;
+let osc = null;
+let gainNode = null;
+let envelope = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  return {r:0,g:0,b:0};
 }
-document.querySelectorAll('#color-picker, #hue, #sat, #lum').forEach(el=>{
-  el.addEventListener('input', updateColor);
+function playNote() {
+  initAudio();
+  if (osc) osc.stop();
+  osc = audioCtx.createOscillator();
+  osc.type = document.getElementById('waveform').value;
+  osc.frequency.value = document.getElementById('freq').value;
+  gainNode = audioCtx.createGain();
+  osc.connect(gainNode).connect(audioCtx.destination);
+  // Envelope
+  const now = audioCtx.currentTime;
+  const attack = document.getElementById('attack').value / 1000;
+  const decay = document.getElementById('decay').value / 1000;
+  const sustain = document.getElementById('sustain').value;
+  const release = document.getElementById('release').value / 1000;
+  gainNode.gain.setValueAtTime(0, now);
+  gainNode.gain.linearRampToValueAtTime(1, now + attack);
+  gainNode.gain.linearRampToValueAtTime(sustain, now + attack + decay);
+  osc.start();
+  // Stop after 3 seconds for demo
+  osc.stop(now + 3 + release);
+}
+document.getElementById('play-note').addEventListener('click', playNote);
+document.getElementById('stop-note').addEventListener('click', () => {
+  if (osc) osc.stop();
 });
-updateColor();
+
+/* Update label values */
+const ranges = ['freq','attack','decay','sustain','release'];
+ranges.forEach(id => {
+  const input = document.getElementById(id);
+  const span = document.getElementById(id + '-val');
+  input.addEventListener('input', () => {
+    let val = input.value;
+    if (id === 'sustain') val = Number(val).toFixed(2);
+    span.textContent = `${val}${id === 'freq' ? ' Hz' : ' ms'}`;
+  });
+});
+
+/* ---------- Color Palette Generator ---------- */
+function randomPastel() {
+  const r = Math.floor((Math.random() * 127) + 127);
+  const g = Math.floor((Math.random() * 127) + 127);
+  const b = Math.floor((Math.random() * 127) + 127);
+  return `rgb(${r},${g},${b})`;
+}
+function generatePalette() {
+  const container = document.getElementById('palette-output');
+  container.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const color = randomPastel();
+    const div = document.createElement('div');
+    div.className = 'color';
+    div.style.backgroundColor = color;
+    div.textContent = color;
+    container.appendChild(div);
+  }
+}
+document.getElementById('generate-palette').addEventListener('click', generatePalette);
+
+/* ---------- Initial UI Setup ---------- */
+document.getElementById('freq-val').textContent = '440 Hz';
+document.getElementById('attack-val').textContent = '200 ms';
+document.getElementById('decay-val').textContent = '200 ms';
+document.getElementById('sustain-val').textContent = '0.70';
+document.getElementById('release-val').textContent = '400 ms';
 </script>
 </body>
 </html>
