@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Red Panda 4‑Legged Kinematics & Gait Controller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#0d0d0d;
+  --panel:#1a1a1a;
+  --accent:#ff6f61;
+  --text:#e0e0e0;
+  --muted:#777;
+}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+header{
+  background:var(--panel);
+  padding:1rem 2rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+header h1{
+  margin:0;
+  font-size:1.5rem;
+  color:var(--accent);
+}
+nav a{
+  color:var(--text);
+  margin-left:1rem;
+  text-decoration:none;
+}
+nav a:hover{color:var(--accent);}
+main{
+  flex:1;
+  display:flex;
+  flex-wrap:wrap;
+  padding:2rem;
+  gap:2rem;
+}
+.panel{
+  background:var(--panel);
+  border-radius:8px;
+  padding:1rem;
+  flex:1 1 300px;
+  min-width:300px;
+  max-width:500px;
+}
+canvas{
+  width:100%;
+  height:auto;
+  background:#111;
+  border-radius:4px;
+}
+.control-group{
+  margin-bottom:1rem;
+}
+.control-group label{
+  display:block;
+  margin-bottom:.3rem;
+  color:var(--muted);
+}
+.control-group input[type=range]{
+  width:100%;
+}
+button{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:.6rem 1.2rem;
+  border-radius:4px;
+  cursor:pointer;
+}
+button:hover{opacity:.9;}
+footer{
+  background:var(--panel);
+  text-align:center;
+  padding:1rem;
+  font-size:.9rem;
+  color:var(--muted);
+}
+@media (max-width:600px){
+  header,footer{padding:1rem;}
+  main{padding:1rem;}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Red Panda Kinematics & Gait</h1>
+  <nav>
+    <a href="#" id="resetBtn">Reset</a>
+    <a href="#" id="downloadBtn">Download Pose</a>
+  </nav>
+</header>
+<main>
+  <section class="panel">
+    <h2>Leg Parameters</h2>
+    <div class="control-group">
+      <label for="hipAngle">Hip Angle (°)</label>
+      <input type="range" id="hipAngle" min="-45" max="45" value="0">
+    </div>
+    <div class="control-group">
+      <label for="kneeAngle">Knee Angle (°)</label>
+      <input type="range" id="kneeAngle" min="0" max="90" value="45">
+    </div>
+    <div class="control-group">
+      <label for="ankleAngle">Ankle Angle (°)</label>
+      <input type="range" id="ankleAngle" min="-30" max="30" value="0">
+    </div>
+    <button id="applyBtn">Apply Pose</button>
+  </section>
+
+  <section class="panel">
+    <h2>Gait Settings</h2>
+    <div class="control-group">
+      <label for="gaitSelect">Gait Type</label>
+      <select id="gaitSelect">
+        <option value="static">Static Stand</option>
+        <option value="trot">Trot</option>
+        <option value="pace">Pace</option>
+        <option value="wave">Wave</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label for="stepFreq">Step Frequency (Hz)</label>
+      <input type="range" id="stepFreq" min="0.2" max="2" step="0.1" value="0.5">
+    </div>
+    <button id="startGaitBtn">Start Gait</button>
+  </section>
+
+  <section class="panel">
+    <h2>Robot View</h2>
+    <canvas id="robotCanvas" width="600" height="400"></canvas>
+  </section>
+</main>
+<footer>
+  © 2026 Red Panda Robotics – All rights reserved.
+</footer>
+
+<script>
+/* ==== Kinematic Model ==== */
+const robot = {
+  // link lengths in mm
+  hip: 80,
+  thigh: 120,
+  shin: 150,
+  // current joint angles (degrees)
+  angles: {
+    hip: 0,
+    knee: 45,
+    ankle: 0
+  },
+  // position of body center (canvas coords)
+  base: {x:300, y:200}
+};
+
+/* ==== Utility ==== */
+const deg2rad = d => d * Math.PI / 180;
+const rad2deg = r => r * 180 / Math.PI;
+
+/* ==== Canvas Rendering ==== */
+const canvas = document.getElementById('robotCanvas');
+const ctx = canvas.getContext('2d');
+
+function drawRobot(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  ctx.translate(robot.base.x, robot.base.y);
+  ctx.strokeStyle = '#ff6f61';
+  ctx.lineWidth = 4;
+  const legs = [
+    {offsetX:-80, offsetY:-30, mirror:false},
+    {offsetX: 80, offsetY:-30, mirror:true},
+    {offsetX:-80, offsetY: 30, mirror:false},
+    {offsetX: 80, offsetY: 30, mirror:true}
+  ];
+  legs.forEach(l=>{
+    ctx.save();
+    ctx.translate(l.offsetX, l.offsetY);
+    if(l.mirror) ctx.scale(-1,1);
+    // hip joint
+    ctx.beginPath();
+    ctx.arc(0,0,6,0,2*Math.PI);
+    ctx.fillStyle = '#ff6f61';
+    ctx.fill();
+    // thigh
+    const hipRad = deg2rad(robot.angles.hip);
+    const kneePos = {
+      x: robot.hip * Math.cos(hipRad),
+      y: robot.hip * Math.sin(hipRad)
+    };
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(kneePos.x, kneePos.y);
+    ctx.stroke();
+    // knee joint
+    ctx.beginPath();
+    ctx.arc(kneePos.x, kneePos.y,5,0,2*Math.PI);
+    ctx.fill();
+    // shin
+    const totalAngle = robot.angles.hip + robot.angles.knee;
+    const shinPos = {
+      x: kneePos.x + robot.thigh * Math.cos(deg2rad(totalAngle)),
+      y: kneePos.y + robot.thigh * Math.sin(deg2rad(totalAngle))
+    };
+    ctx.beginPath();
+    ctx.moveTo(kneePos.x, kneePos.y);
+    ctx.lineTo(shinPos.x, shinPos.y);
+    ctx.stroke();
+    // ankle joint
+    ctx.beginPath();
+    ctx.arc(shinPos.x, shinPos.y,4,0,2*Math.PI);
+    ctx.fill();
+    // foot
+    const footAngle = totalAngle + robot.angles.ankle;
+    const footEnd = {
+      x: shinPos.x + 30 * Math.cos(deg2rad(footAngle)),
+      y: shinPos.y + 30 * Math.sin(deg2rad(footAngle))
+    };
+    ctx.beginPath();
+    ctx.moveTo(shinPos.x, shinPos.y);
+    ctx.lineTo(footEnd.x, footEnd.y);
+    ctx.stroke();
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
+/* ==== UI Handlers ==== */
+document.getElementById('applyBtn').addEventListener('click', ()=>{
+  robot.angles.hip = parseFloat(document.getElementById('hipAngle').value);
+  robot.angles.knee = parseFloat(document.getElementById('kneeAngle').value);
+  robot.angles.ankle = parseFloat(document.getElementById('ankleAngle').value);
+  drawRobot();
+});
+
+document.getElementById('resetBtn').addEventListener('click', e=>{
+  e.preventDefault();
+  robot.angles = {hip:0,knee:45,ankle:0};
+  document.getElementById('hipAngle').value = 0;
+  document.getElementById('kneeAngle').value = 45;
+  document.getElementById('ankleAngle').value = 0;
+  drawRobot();
+});
+
+document.getElementById('downloadBtn').addEventListener('click', e=>{
+  e.preventDefault();
+  const link = document.createElement('a');
+  link.download = 'robot_pose.json';
+  link.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(robot.angles));
+  link.click();
+});
+
+/* ==== Gait Animation ==== */
+let gaitInterval = null;
+function startGait(){
+  if(gaitInterval){clearInterval(gaitInterval); gaitInterval=null;}
+  const gait = document.getElementById('gaitSelect').value;
+  const freq = parseFloat(document.getElementById('stepFreq').value);
+  const period = 1000 / freq;
+  let phase = 0;
+  gaitInterval = setInterval(()=>{
+    phase = (phase + 0.05) % 2;
+    // simple sinusoidal leg motion
+    const angle = 30 * Math.sin(phase * Math.PI);
+    robot.angles.hip = angle;
+    robot.angles.knee = 60 - 20 * Math.sin(phase * Math.PI);
+    robot.angles.ankle = -10 + 5 * Math.sin(phase * Math.PI);
+    drawRobot();
+  }, period);
+}
+
+document.getElementById('startGaitBtn').addEventListener('click', startGait);
+
+/* ==== Initial Render ==== */
+drawRobot();
+</script>
+</body>
+</html>
