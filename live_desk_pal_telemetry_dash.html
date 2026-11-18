@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Desk‑Pal Telemetry Dashboard</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;background:#f4f4f4;color:#333}
+  .container{max-width:1200px;margin:auto;padding:20px}
+  h1{font-size:2.2rem;text-align:center;margin-bottom:25px}
+  .section{background:#fff;padding:20px;border-radius:8px;margin-bottom:25px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+  .section h2{margin-top:0;font-size:1.5rem;border-bottom:1px solid #e0e0e0;padding-bottom:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+  .grid div{background:#fafafa;padding:12px;border-radius:5px;font-size:.95rem}
+  #chatLog{height:280px;overflow-y:auto;background:#fafafa;padding:12px;border:1px solid #e0e0e0;border-radius:5px;margin-bottom:10px}
+  #chatLog p{margin:6px 0}
+  #chatInput{width:calc(100% - 100px);padding:10px;border:1px solid #ccc;border-radius:4px}
+  #sendBtn{padding:10px 18px;margin-left:6px;border:none;background:#007bff;color:#fff;border-radius:4px;cursor:pointer}
+  #sendBtn:hover{background:#0069d9}
+  .btn{padding:8px 16px;border:none;border-radius:4px;background:#28a745;color:#fff;cursor:pointer;margin-right:8px}
+  .btn:hover{background:#218838}
+  .status{font-size:.9rem;color:#777;margin-top:5px}
+  .error{color:#d9534f;margin-top:5px}
+  .loader{display:inline-block;width:16px;height:16px;border:2px solid #ccc;border-top:2px solid #007bff;border-radius:50%;animation:spin .6s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Live Desk‑Pal Telemetry Dashboard</h1>
+
+  <div class="section" id="stateSection">
+    <h2>Current State <span id="stateStatus" class="status"></span></h2>
+    <button class="btn" id="refreshStateBtn">Refresh State</button>
+    <div class="grid" id="stateGrid"></div>
+    <div id="stateError" class="error"></div>
+  </div>
+
+  <div class="section" id="systemSection">
+    <h2>System Info <span id="systemStatus" class="status"></span></h2>
+    <button class="btn" id="refreshSystemBtn">Refresh System</button>
+    <div class="grid" id="systemGrid"></div>
+    <div id="systemError" class="error"></div>
+  </div>
+
+  <div class="section" id="chatSection">
+    <h2>Chat with Desk‑Pal</h2>
+    <div id="chatLog"></div>
+    <div style="display:flex;align-items:center">
+      <input type="text" id="chatInput" placeholder="Type a message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+    <div id="chatError" class="error"></div>
+  </div>
+</div>
+
+<script>
+const stateStatus=document.getElementById('stateStatus');
+const systemStatus=document.getElementById('systemStatus');
+const stateError=document.getElementById('stateError');
+const systemError=document.getElementById('systemError');
+const chatError=document.getElementById('chatError');
+
+async function fetchData(url, grid, statusEl, errorEl) {
+  statusEl.innerHTML='<span class="loader"></span> Loading…';
+  errorEl.textContent='';
+  try {
+    const res=await fetch(url);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    grid.innerHTML='';
+    Object.entries(data).forEach(([k,v])=>{
+      const cell=document.createElement('div');
+      cell.innerHTML=`<strong>${k}:</strong> ${Array.isArray(v)?v.join(', '):v}`;
+      grid.appendChild(cell);
+    });
+    statusEl.textContent='✓';
+  } catch(err) {
+    errorEl.textContent='Error: '+err.message;
+    statusEl.textContent='';
+  }
+}
+
+async function loadState(){await fetchData('/api/state',document.getElementById('stateGrid'),stateStatus,stateError);}
+async function loadSystem(){await fetchData('/api/system',document.getElementById('systemGrid'),systemStatus,systemError);}
+
+async function sendMessage(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();
+  if(!msg)return;
+  appendChat('You',msg);
+  input.value='';
+  try{
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg})});
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data=await res.json();
+    appendChat('Desk‑Pal',data.reply);
+  }catch(err){
+    appendChat('Error',`Failed: ${err.message}`);
+    chatError.textContent=err.message;
+  }
+}
+
+function appendChat(sender,text){
+  const log=document.getElementById('chatLog');
+  const p=document.createElement('p');
+  p.innerHTML=`<strong>${sender}:</strong> ${text}`;
+  log.appendChild(p);
+  log.scrollTop=log.scrollHeight;
+}
+
+document.getElementById('refreshStateBtn').addEventListener('click',loadState);
+document.getElementById('refreshSystemBtn').addEventListener('click',loadSystem);
+document.getElementById('sendBtn').addEventListener('click',sendMessage);
+document.getElementById('chatInput').addEventListener('keypress',e=>{if(e.key==='Enter')sendMessage();});
+
+loadState();loadSystem();
+</script>
+</body>
+</html>
