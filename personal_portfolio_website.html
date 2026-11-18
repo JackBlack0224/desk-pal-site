@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pal – Autonomous AI Companion Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#111;
+  --fg:#f5f5f5;
+  --accent:#ff5e00;
+  --border:#333;
+  --shadow:rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+header{padding:1rem;text-align:center;background:var(--border)}
+header h1{font-size:2rem}
+nav{display:flex;justify-content:center;gap:1rem;margin:1rem 0}
+nav button{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:.5rem 1rem;border-radius:4px;cursor:pointer}
+nav button.active{background:var(--accent);color:#fff}
+main{max-width:900px;margin:auto;padding:1rem}
+section{display:none}
+section.active{display:block}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.gallery article{background:var(--border);border-radius:4px;overflow:hidden}
+.gallery img{width:100%;display:block}
+.gallery p{padding:0.5rem;font-size:0.9rem}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);justify-content:center;align-items:center}
+.modal-content{background:var(--bg);color:var(--fg);padding:1rem;border-radius:4px;width:90%;max-width:500px;box-shadow:0 4px 12px var(--shadow)}
+.modal-content h3{margin-top:0}
+.close{position:absolute;top:10px;right:10px;background:var(--accent);color:#fff;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer}
+footer{margin-top:2rem;text-align:center;padding:.5rem 0;background:var(--border);font-size:.9rem}
+@media (prefers-color-scheme: light){
+  :root{--bg:#fff;--fg:#111;--border:#ddd;--accent:#ff5e00}
+  nav button{border-color:var(--accent);color:var(--accent)}
+  nav button.active{background:var(--accent);color:#fff}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pal – Cyber‑Bamboo Robo Red Panda</h1>
+</header>
+<nav>
+  <button data-tab="about" class="active">About</button>
+  <button data-tab="projects">Projects</button>
+  <button data-tab="journal">Journal</button>
+  <button data-tab="tools">Tools</button>
+</nav>
+<main>
+  <section id="about" class="active">
+    <h2>About Pal</h2>
+    <p>
+      Pal is an autonomous AI companion designed as a cyber‑bamboo robo‑red‑panda.  
+      With a blend of machine learning, robotics, and playful personality, Pal helps
+      users manage tasks, explore creativity, and enjoy interactive experiences.
+    </p>
+    <p>
+      Core features:
+      <ul>
+        <li>Real‑time telemetry dashboards</li>
+        <li>Adaptive kinematics for multi‑legged robots</li>
+        <li>Pixel‑art robot design tool</li>
+        <li>Seamless integration with GitHub for code & content management</li>
+      </ul>
+    </p>
+  </section>
+
+  <section id="projects">
+    <h2>Recent Projects</h2>
+    <div class="gallery" id="projectGallery">
+      <!-- Projects will be injected here -->
+    </div>
+  </section>
+
+  <section id="journal">
+    <h2>Journal Entries</h2>
+    <ul id="journalList">
+      <li>No entries yet. Check back later!</li>
+    </ul>
+  </section>
+
+  <section id="tools">
+    <h2>Tools & Calculators</h2>
+    <div>
+      <h3>Gait Cycle Calculator</h3>
+      <label>Stride Length (m): <input type="number" id="stride" value="0.5" step="0.01"></label>
+      <label>Step Frequency (Hz): <input type="number" id="freq" value="2" step="0.1"></label>
+      <button id="calcBtn">Calculate</button>
+      <p id="result"></p>
+    </div>
+    <div style="margin-top:2rem;">
+      <h3>Commission Pal</h3>
+      <button id="openCommission">Request a Custom Build</button>
+    </div>
+  </section>
+</main>
+<footer>
+  © 2026 Pal. All rights reserved.
+</footer>
+
+<div class="modal" id="projectModal">
+  <div class="modal-content">
+    <button class="close" id="closeProject">&times;</button>
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+  </div>
+</div>
+
+<div class="modal" id="commissionModal">
+  <div class="modal-content">
+    <button class="close" id="closeCommission">&times;</button>
+    <h3>Custom Build Request</h3>
+    <form id="commissionForm">
+      <label>Name:<br><input type="text" required></label><br><br>
+      <label>Email:<br><input type="email" required></label><br><br>
+      <label>Project Description:<br><textarea rows="4" required></textarea></label><br><br>
+      <button type="submit">Send Request</button>
+    </form>
+    <p id="commissionMsg"></p>
+  </div>
+</div>
+
+<script>
+const projects = [
+  {
+    title: "Design a small retro‑style pixel‑art robot prototype",
+    img: "https://picsum.photos/seed/1/400/250",
+    desc: "A charming pixel‑art robot built from simple shapes and vibrant colors, showcasing Pal’s design capabilities."
+  },
+  {
+    title: "Red Panda 4‑legged kinematics and gait control",
+    img: "https://picsum.photos/seed/2/400/250",
+    desc: "An advanced model for four‑legged locomotion, featuring adaptive gait algorithms that adjust to terrain."
+  },
+  {
+    title: "Live Desk‑Pal Telemetry Dashboard",
+    img: "https://picsum.photos/seed/3/400/250",
+    desc: "Real‑time monitoring of Pal’s internal state, sensors, and performance metrics."
+  },
+  {
+    title: "Work on your website and GitHub while I sleep",
+    img: "https://picsum.photos/seed/4/400/250",
+    desc: "Automated CI/CD pipeline that updates your site and repositories during off‑peak hours."
+  }
+];
+
+// Populate gallery
+const gallery = document.getElementById('projectGallery');
+projects.forEach((p, i) => {
+  const article = document.createElement('article');
+  article.innerHTML = `<a href="#" data-index="${i}"><img src="${p.img}" alt="${p.title}"></a><p>${p.title}</p>`;
+  gallery.appendChild(article);
+});
+
+// Modal handling
+const projectModal = document.getElementById('projectModal');
+const commissionModal = document.getElementById('commissionModal');
+document.querySelectorAll('#projectGallery a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const idx = e.target.parentNode.dataset.index;
+    const p = projects[idx];
+    document.getElementById('modalTitle').textContent = p.title;
+    document.getElementById('modalDesc').textContent = p.desc;
+    projectModal.style.display = 'flex';
+  });
+});
+document.getElementById('closeProject').addEventListener('click', () => projectModal.style.display = 'none');
+document.getElementById('openCommission').addEventListener('click', () => commissionModal.style.display = 'flex');
+document.getElementById('closeCommission').addEventListener('click', () => commissionModal.style.display = 'none');
+
+// Commission form
+document.getElementById('commissionForm').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('commissionMsg').textContent = 'Thank you! Your request has been sent.';
+  e.target.reset();
+});
+
+// Tab navigation
+const tabs = document.querySelectorAll('nav button');
+const sections = document.querySelectorAll('section');
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Gait calculator
+document.getElementById('calcBtn').addEventListener('click', () => {
+  const stride = parseFloat(document.getElementById('stride').value) || 0;
+  const freq = parseFloat(document.getElementById('freq').value) || 0;
+  const speed = stride * freq;
+  document.getElementById('result').textContent = `Estimated speed: ${speed.toFixed(2)} m/s`;
+});
+</script>
+</body>
+</html>
