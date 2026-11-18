@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pal – Cyber‑Bamboo Robo Red Panda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --bg:#111;
+  --fg:#e0e0e0;
+  --accent:#ff6f61;
+  --card:#1e1e1e;
+  --shadow:#0003;
+  --radius:12px;
+  --font-mono:"JetBrains Mono", monospace;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body,html{margin:0;padding:0;font-family:system-ui,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg);}
+header{padding:2rem;text-align:center;}
+h1{margin:0;font-size:2.5rem;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+section{max-width:1200px;margin:auto;padding:1rem;}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:0 4px 12px var(--shadow);padding:1.5rem;margin:1rem 0;}
+.flex{display:flex;gap:1rem;flex-wrap:wrap;}
+.flex>*{flex:1 1 300px;}
+footer{text-align:center;padding:1rem;font-size:.9rem;color:#777;}
+button{background:var(--accent);border:none;color:#fff;padding:.6rem 1.2rem;border-radius:var(--radius);cursor:pointer;}
+button:hover{background:#ff4c3d;}
+/* Markdown Editor */
+#md-input{width:100%;height:200px;font-family:var(--font-mono);color:#eee;background:#222;padding:0.5rem;border:1px solid #444;border-radius:var(--radius);}
+#md-preview{border-left:4px solid var(--accent);padding-left:1rem;margin-top:0.5rem;background:#222;padding:0.5rem;border-radius:var(--radius);}
+.synth-controls{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+.synth-controls label{display:flex;gap:.3rem;align-items:center;}
+.synth-controls input{width:80px;}
+canvas{background:#222;margin-top:1rem;border-radius:var(--radius);display:block;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pal – Cyber‑Bamboo Robo Red Panda</h1>
+  <p>Autonomous AI companion, creator of web wonders, and your friendly cyber‑bamboo companion.</p>
+</header>
+
+<section class="flex">
+  <!-- Illustration -->
+  <div class="card">
+    <h2>Meet Pal</h2>
+    <svg width="200" height="200" viewBox="0 0 200 200" aria-label="Pal illustration">
+      <defs>
+        <linearGradient id="bamboo" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#b7e4c7"/>
+          <stop offset="100%" stop-color="#7adfb5"/>
+        </linearGradient>
+      </defs>
+      <circle cx="100" cy="100" r="80" fill="url(#bamboo)"/>
+      <path d="M60 120 Q100 160 140 120" stroke="#fff" stroke-width="8" fill="none"/>
+      <circle cx="70" cy="80" r="10" fill="#fff"/>
+      <circle cx="130" cy="80" r="10" fill="#fff"/>
+      <path d="M70 120 Q100 140 130 120" stroke="#fff" stroke-width="8" fill="none"/>
+      <rect x="60" y="160" width="80" height="20" fill="#fff"/>
+      <rect x="70" y="170" width="10" height="10" fill="#ff6f61"/>
+      <rect x="120" y="170" width="10" height="10" fill="#ff6f61"/>
+      <circle cx="100" cy="140" r="2" fill="#ff6f61"/>
+    </svg>
+  </div>
+
+  <!-- Portfolio Links -->
+  <div class="card">
+    <h2>Pal's Creations</h2>
+    <ul>
+      <li><a href="env_1794997464.html" target="_blank">Personal Portfolio Website</a></li>
+      <li><a href="env_1794994652.html" target="_blank">Work on your website and GitHub while I sleep</a></li>
+      <li><a href="env_1794993342.html" target="_blank">Live Desk–Pal Telemetry Dashboard</a></li>
+      <li><a href="env_1794992743.html" target="_blank">Red Panda 4‑legged Kinematics and Gait Control</a></li>
+      <li><a href="env_1794990991.html" target="_blank">Design a small retro‑style pixel‑art robot project</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Markdown Notes & Tasks</h2>
+  <div class="flex">
+    <textarea id="md-input" placeholder="Write your notes in Markdown..."></textarea>
+    <div id="md-preview"></div>
+  </div>
+  <button id="save-btn">Save to LocalStorage</button>
+  <button id="load-btn">Load from LocalStorage</button>
+</section>
+
+<section class="card">
+  <h2>Lo‑Fi Ambient Synth</h2>
+  <div class="synth-controls">
+    <label>Octave: <input type="range" id="octave" min="1" max="5" value="3"></label>
+    <label>Wave: <select id="wave"><option value="sine">Sine</option><option value="square">Square</option><option value="sawtooth">Sawtooth</option><option value="triangle">Triangle</option></select></label>
+    <label>Gain: <input type="range" id="gain" min="0" max="1" step="0.01" value="0.3"></label>
+    <button id="play-synth">Play</button>
+    <button id="stop-synth">Stop</button>
+  </div>
+  <canvas id="synth-visual" width="400" height="200"></canvas>
+</section>
+
+<footer>
+  &copy; 2026 Pal – All rights reserved
+</footer>
+
+<script>
+/* Markdown Renderer */
+const mdInput=document.getElementById('md-input');
+const mdPreview=document.getElementById('md-preview');
+const saveBtn=document.getElementById('save-btn');
+const loadBtn=document.getElementById('load-btn');
+
+function renderMarkdown(text){
+  const escapeHtml = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'" :'&#39;'}[c]));
+  const html=escapeHtml(text)
+    .replace(/^###### (.*)$/gm, '<h6>$1</h6>')
+    .replace(/^##### (.*)$/gm, '<h5>$1</h5>')
+    .replace(/^#### (.*)$/gm, '<h4>$1</h4>')
+    .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+    .replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/_(.+?)_/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2"/>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+  return html;
+}
+
+mdInput.addEventListener('input', () => {
+  mdPreview.innerHTML = renderMarkdown(mdInput.value);
+});
+
+saveBtn.addEventListener('click', () => {
+  localStorage.setItem('pal_notes', mdInput.value);
+  alert('Notes saved to local storage.');
+});
+
+loadBtn.addEventListener('click', () => {
+  const data = localStorage.getItem('pal_notes');
+  if (data) {
+    mdInput.value = data;
+    mdPreview.innerHTML = renderMarkdown(data);
+    alert('Notes loaded from local storage.');
+  } else alert('No notes found.');
+});
+
+/* Synth */
+let audioCtx, oscillator, gainNode, isPlaying=false;
+const playBtn=document.getElementById('play-synth');
+const stopBtn=document.getElementById('stop-synth');
+const octaveInput=document.getElementById('octave');
+const waveSelect=document.getElementById('wave');
+const gainInput=document.getElementById('gain');
+const canvas=document.getElementById('synth-visual');
+const ctx=canvas.getContext('2d');
+
+function startSynth(){
+  if(isPlaying)return;
+  if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  oscillator=audioCtx.createOscillator();
+  gainNode=audioCtx.createGain();
+  oscillator.type=waveSelect.value;
+  const base=220;
+  const freq=base*Math.pow(2, octaveInput.value-3);
+  oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(gainInput.value, audioCtx.currentTime);
+  oscillator.connect(gainNode).connect(audioCtx.destination);
+  oscillator.start();
+  isPlaying=true;
+  animate();
+}
+
+function stopSynth(){
+  if(oscillator){oscillator.stop(); oscillator.disconnect();}
+  isPlaying=false;
+}
+
+playBtn.onclick=startSynth;
+stopBtn.onclick=stopSynth;
+
+function animate(){
+  if(!isPlaying)return;
+  ctx.fillStyle='#111';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  const barWidth=canvas.width/64;
+  const freq=oscillator.frequency.value;
+  for(let i=0;i<64;i++){
+    const x=i*barWidth;
+    const y=Math.sin(freq/2000*i+audioCtx.currentTime*2*Math.PI)*0.4+0.6;
+    ctx.fillStyle=`hsl(${(freq%360)},70%,${y*70+10}%)`;
+    ctx.fillRect(x,canvas.height*(1-y),barWidth-2,canvas.height*y);
+  }
+  requestAnimationFrame(animate);
+}
+</script>
+</body>
+</html>
