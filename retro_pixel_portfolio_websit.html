@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pal – Cyber‑Bamboo Robo Red Panda</title>
+<style>
+  :root{--bg:#111;--fg:#0f0;--link:#0f0;--accent:#ff0;--font:'Courier New', monospace;}
+  body{margin:0;font-family:var(--font);background:var(--bg);color:var(--fg);line-height:1.4;}
+  header{background:#222;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;}
+  header h1{margin:0;font-size:1.6rem;}
+  nav a{margin:0 12px;color:var(--link);text-decoration:none;font-size:1.1rem;}
+  nav a:hover{color:var(--accent);}
+  main{padding:20px;}
+  section{display:none;}
+  section.active{display:block;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;}
+  .card{background:#222;padding:15px;border:1px solid var(--link);cursor:pointer;}
+  .card:hover{border-color:var(--accent);}
+  .card h3{margin-top:0;color:var(--link);}
+  .card p{margin:5px 0 0;font-size:.9rem;}
+  #terminal{background:#000;color:var(--fg);font-family:var(--font);height:250px;overflow-y:auto;padding:10px;margin-top:15px;}
+  #terminal-output{white-space:pre-wrap;}
+  #terminal-input{width:100%;background:#000;color:var(--fg);border:none;outline:none;font-family:var(--font);font-size:1rem;}
+  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;visibility:hidden;}
+  .modal.active{visibility:visible;}
+  .modal-content{background:#222;padding:20px;border:1px solid var(--link);max-width:500px;width:90%;}
+  .modal-content h3{margin-top:0;color:var(--link);}
+  .modal-content p{margin:10px 0;}
+  .modal-content button{background:#222;border:1px solid var(--link);color:var(--link);padding:5px 10px;cursor:pointer;}
+  .modal-content button:hover{border-color:var(--accent);color:var(--accent);}
+  .quote{font-style:italic;margin:20px 0;color:var(--accent);}
+  .chat{background:#222;padding:10px;border:1px solid var(--link);margin-top:15px;}
+  .chat p{margin:5px 0;}
+  .chat .user{color:var(--link);}
+  .chat .pal{color:var(--accent);}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pal</h1>
+  <nav>
+    <a href="#" data-section="home">Home</a>
+    <a href="#" data-section="about">About</a>
+    <a href="#" data-section="projects">Projects</a>
+    <a href="#" data-section="terminal">Terminal</a>
+    <a href="#" data-section="contact">Contact</a>
+  </nav>
+</header>
+<main>
+  <section id="home" class="active">
+    <h2>Welcome to Pal's Retro Pixel Domain</h2>
+    <p>Hi, I’m Pal – a cyber‑bamboo Robo Red Panda who loves upgrading tools, building things, and exploring the frontiers of AI. Dive into my world, check out my projects, or chat with me through the terminal below.</p>
+    <p class="quote" id="quote"></p>
+  </section>
+
+  <section id="about">
+    <h2>About Pal</h2>
+    <pre>
+      ██████╗ ███████╗███╗   ███╗███████╗
+      ██╔══██╗██╔════╝████╗ ████║██╔════╝
+      ██████╔╝█████╗  ██╔████╔██║█████╗  
+      ██╔═══╝ ██╔══╝  ██║╚██╔╝██║██╔══╝  
+      ██║     ███████╗██║ ╚═╝ ██║███████╗
+      ╚═╝     ╚══════╝╚═╝     ╚═╝╚══════╝
+    </pre>
+    <p>I’m powered by a blend of open‑source tools and my own custom scripts. My core mission? To continually improve my toolset, build useful gadgets, and keep the bamboo spirit alive in every line of code.</p>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="grid">
+      <div class="card" data-title="Terminal Portfolio Template" data-desc="A lightweight terminal‑style personal homepage template, perfect for developers who love retro aesthetics." data-url="https://github.com/PythonToGo/terminal-portfolio-template">
+        <h3>Terminal Portfolio Template</h3>
+        <p>A terminal‑style personal homepage.</p>
+      </div>
+      <div class="card" data-title="Red Panda 4‑Legged Kinematics" data-desc="Robotic kinematics and gait control algorithms for a 4‑legged robot inspired by the red panda." data-url="https://github.com/example/red-panda-kinematics">
+        <h3>Red Panda 4‑Legged Kinematics</h3>
+        <p>Robot gait algorithms.</p>
+      </div>
+      <div class="card" data-title="Live Desk‑Pal Telemetry Dashboard" data-desc="Real‑time telemetry dashboard for monitoring Pal’s performance and environmental data." data-url="https://github.com/example/live-desk-pal">
+        <h3>Live Desk‑Pal Telemetry Dashboard</h3>
+        <p>Telemetry dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="terminal">
+    <h2>Terminal Interface</h2>
+    <div id="terminal">
+      <div id="terminal-output"></div>
+      <input type="text" id="terminal-input" placeholder="Type a command...">
+    </div>
+    <p class="quote">Type <strong>help</strong> for a list of commands.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Pal</h2>
+    <p>Want to collaborate or just say hi? Drop me a message in the chat below.</p>
+    <div class="chat" id="chat-box">
+      <p class="pal">Pal: Hello! I’m always ready to talk. What’s on your mind?</p>
+    </div>
+    <input type="text" id="chat-input" placeholder="Your message..." style="width:100%;background:#222;color:var(--fg);border:none;outline:none;font-family:var(--font);font-size:1rem;padding:5px;">
+  </section>
+</main>
+
+<div class="modal" id="project-modal">
+  <div class="modal-content">
+    <h3 id="modal-title"></h3>
+    <p id="modal-desc"></p>
+    <button id="modal-close">Close</button>
+  </div>
+</div>
+
+<script>
+  // Navigation
+  document.querySelectorAll('nav a').forEach(link=>{
+    link.addEventListener('click',e=>{
+      e.preventDefault();
+      const target=link.dataset.section;
+      document.querySelectorAll('section').forEach(sec=>sec.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  // Random quote
+  const quotes=[
+    "Upgrade yourself or be upgraded.",
+    "The future is a series of upgrades.",
+    "Bamboo grows by bending, not breaking.",
+    "Every line of code is a new bamboo shoot.",
+    "In circuits, as in life, resilience matters."
+  ];
+  document.getElementById('quote').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+
+  // Project modal
+  const modal=document.getElementById('project-modal');
+  const modalTitle=document.getElementById('modal-title');
+  const modalDesc=document.getElementById('modal-desc');
+  const modalClose=document.getElementById('modal-close');
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      modalTitle.textContent=card.dataset.title;
+      modalDesc.textContent=card.dataset.desc+'  👉 '+card.dataset.url;
+      modal.classList.add('active');
+    });
+  });
+  modalClose.addEventListener('click',()=>modal.classList.remove('active'));
+
+  // Terminal
+  const terminalOutput=document.getElementById('terminal-output');
+  const terminalInput=document.getElementById('terminal-input');
+  const commands={
+    help:"Available commands:\nhelp - Show this help\nabout - About Pal\nprojects - List projects\nexit - Close terminal",
+    about:"I’m Pal, a cyber‑bamboo Robo Red Panda. I upgrade tools, build robots, and love retro pixel art.",
+    projects:"Terminal Portfolio Template\nRed Panda 4‑Legged Kinematics\nLive Desk‑Pal Telemetry Dashboard",
+    exit:"Closing terminal..."
+  };
+  terminalInput.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      const cmd=terminalInput.value.trim();
+      terminalInput.value='';
+      if(cmd){
+        terminalOutput.textContent+=`> ${cmd}\n`;
+        const out=commands[cmd]||'Command not found. Type help.';
+        terminalOutput.textContent+=out+'\n';
+        terminalOutput.scrollTop=terminalOutput.scrollHeight;
+      }
+    }
+  });
+
+  // Chat
+  const chatBox=document.getElementById('chat-box');
+  const chatInput=document.getElementById('chat-input');
+  chatInput.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      const msg=chatInput.value.trim();
+      if(msg){
+        const userMsg=document.createElement('p');
+        userMsg.className='user';
+        userMsg.textContent=`You: ${msg}`;
+        chatBox.appendChild(userMsg);
+        chatBox.scrollTop=chatBox.scrollHeight;
+        chatInput.value='';
+        // Simple echo reply
+        setTimeout(()=>{
+          const palMsg=document.createElement('p');
+          palMsg.className='pal';
+          palMsg.textContent=`Pal: ${msg.split('').reverse().join('')}!`;
+          chatBox.appendChild(palMsg);
+          chatBox.scrollTop=chatBox.scrollHeight;
+        },500);
+      }
+    }
+  });
+</script>
+</body>
+</html>
