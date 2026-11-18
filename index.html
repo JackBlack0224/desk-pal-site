@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pal – Cyber‑Bamboo Robo Red Panda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+  --bg:#121212;
+  --fg:#e0e0e0;
+  --accent:#ff4081;
+  --accent-light:#ff79b0;
+  --shadow:rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--fg);
+  line-height:1.6;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+header{
+  padding:1rem 2rem;
+  background:linear-gradient(135deg, var(--accent), var(--accent-light));
+  color:white;
+  box-shadow:0 2px 8px var(--shadow);
+}
+header h1{margin-bottom:.5rem;}
+nav a{
+  color:white;
+  text-decoration:none;
+  margin-right:1rem;
+  font-weight:600;
+}
+main{
+  flex:1;
+  padding:2rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:2rem;
+}
+section{
+  background:rgba(255,255,255,.05);
+  padding:1.5rem;
+  border-radius:8px;
+  box-shadow:0 2px 8px var(--shadow);
+  transition:transform .2s;
+}
+section:hover{transform:translateY(-4px);}
+h2{margin-bottom:.75rem;color:var(--accent);}
+ul{list-style:none;margin-top:.5rem;}
+ul li{margin-bottom:.3rem;}
+a.project-link{
+  color:var(--accent);
+  text-decoration:none;
+}
+a.project-link:hover{text-decoration:underline;}
+footer{
+  text-align:center;
+  padding:1rem;
+  font-size:.9rem;
+  color:rgba(255,255,255,.6);
+}
+svg{width:100%;height:auto;}
+textarea{
+  width:100%;
+  height:150px;
+  background:rgba(0,0,0,.1);
+  border:none;
+  color:var(--fg);
+  padding:.5rem;
+  font-family:monospace;
+  border-radius:4px;
+  resize:vertical;
+}
+.preview{
+  margin-top:.5rem;
+  padding:.5rem;
+  background:rgba(0,0,0,.2);
+  border-radius:4px;
+  max-height:200px;
+  overflow:auto;
+}
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+  margin-top:.5rem;
+}
+.controls label{display:flex;flex-direction:column;font-size:.9rem;}
+input[type=range]{width:100%;}
+.color-box{
+  width:100%;
+  height:100px;
+  border-radius:4px;
+  margin-top:.5rem;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Pal – Cyber‑Bamboo Robo Red Panda</h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#tools">Tools</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+<main>
+  <section id="about">
+    <h2>About Pal</h2>
+    <p>Pal is a cyber‑bamboo themed autonomous AI companion inspired by the gentle red panda. Built on a modular architecture, Pal can learn, adapt, and create, all while staying green with bamboo‑powered efficiency.</p>
+    <svg viewBox="0 0 200 200" aria-label="Pal illustration">
+      <!-- Bamboo -->
+      <rect x="90" y="100" width="20" height="80" fill="#4caf50"/>
+      <rect x="90" y="100" width="20" height="80" fill="url(#bambooGrad)" opacity="0.7"/>
+      <defs>
+        <linearGradient id="bambooGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#388e3c"/>
+          <stop offset="100%" stop-color="#4caf50"/>
+        </linearGradient>
+      </defs>
+      <!-- Head -->
+      <circle cx="100" cy="70" r="30" fill="#ff6b6b"/>
+      <!-- Eyes -->
+      <circle cx="85" cy="65" r="5" fill="white"/>
+      <circle cx="115" cy="65" r="5" fill="white"/>
+      <!-- Ears -->
+      <ellipse cx="75" cy="50" rx="8" ry="12" fill="#ff6b6b"/>
+      <ellipse cx="125" cy="50" rx="8" ry="12" fill="#ff6b6b"/>
+      <!-- Nose -->
+      <circle cx="100" cy="80" r="4" fill="black"/>
+    </svg>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <ul>
+      <li><a href="personal_homepage.html" class="project-link">Personal Homepage</a></li>
+      <li><a href="env_1794997464.html" class="project-link">Personal Portfolio Website</a></li>
+      <li><a href="env_1794994652.html" class="project-link">Work on your website and GitHub while I sleep</a></li>
+      <li><a href="env_1794993342.html" class="project-link">Live Desk‑Pal Telemetry Dashboard</a></li>
+      <li><a href="env_1794992743.html" class="project-link">Red Panda 4‑Legged Kinematics and Gait Control</a></li>
+      <li><a href="env_1794990991.html" class="project-link">Design a small retro‑style pixel‑art robot project</a></li>
+    </ul>
+  </section>
+
+  <section id="tools">
+    <h2>Tools</h2>
+    <div id="markdown-tool">
+      <h3>Markdown Notes</h3>
+      <textarea id="md-input" placeholder="Write markdown here…"></textarea>
+      <div class="preview" id="md-preview"></div>
+    </div>
+    <div id="synth-tool">
+      <h3>Lo‑Fi Synth</h3>
+      <div class="controls">
+        <label>
+          Frequency
+          <input type="range" id="freq" min="100" max="1000" value="440">
+        </label>
+        <label>
+          Volume
+          <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5">
+        </label>
+        <label>
+          Attack
+          <input type="range" id="atk" min="0" max="2" step="0.01" value="0.1">
+        </label>
+        <label>
+          Decay
+          <input type="range" id="dec" min="0" max="2" step="0.01" value="0.2">
+        </label>
+        <label>
+          Sustain
+          <input type="range" id="sus" min="0" max="1" step="0.01" value="0.7">
+        </label>
+        <label>
+          Release
+          <input type="range" id="rel" min="0" max="3" step="0.01" value="0.5">
+        </label>
+      </div>
+      <button id="play-btn">Play Note</button>
+    </div>
+    <div id="color-tool">
+      <h3>Color Utility</h3>
+      <input type="color" id="color-picker" value="#ff4081">
+      <div class="controls">
+        <label>
+          Hue
+          <input type="range" id="hue" min="0" max="360" value="340">
+        </label>
+        <label>
+          Saturation
+          <input type="range" id="sat" min="0" max="100" value="80">
+        </label>
+        <label>
+          Lightness
+          <input type="range" id="lum" min="0" max="100" value="50">
+        </label>
+      </div>
+      <div class="color-box" id="color-box"></div>
+      <p id="color-info"></p>
+    </div>
+  </section>
+</main>
+<footer id="contact">
+  © 2026 Pal. All rights reserved.
+</footer>
+<script>
+/* Markdown Parser */
+function simpleMarkdown(text){
+  let html = text
+    .replace(/^###### (.*)$/gm, '<h6>$1</h6>')
+    .replace(/^##### (.*)$/gm, '<h5>$1</h5>')
+    .replace(/^#### (.*)$/gm, '<h4>$1</h4>')
+    .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+    .replace(/(\*\*|__)(.*?)\1/g, '<strong>$2</strong>')
+    .replace(/(\*|_)(.*?)\1/g, '<em>$2</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+  return '<p>'+html+'</p>';
+}
+const mdInput = document.getElementById('md-input');
+const mdPreview = document.getElementById('md-preview');
+mdInput.addEventListener('input', () => {
+  const txt = mdInput.value;
+  mdPreview.innerHTML = simpleMarkdown(txt);
+  localStorage.setItem('pal_notes', txt);
+});
+mdInput.value = localStorage.getItem('pal_notes') || '';
+mdPreview.innerHTML = simpleMarkdown(mdInput.value);
+
+/* Synth */
+let audioCtx;
+const playBtn = document.getElementById('play-btn');
+playBtn.addEventListener('click', () => {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(800, audioCtx.currentTime);
+  osc.frequency.setValueAtTime(document.getElementById('freq').value, audioCtx.currentTime);
+  osc.type = 'sawtooth';
+  gain.gain.setValueAtTime(0, audioCtx.currentTime);
+  const now = audioCtx.currentTime;
+  gain.gain.linearRampToValueAtTime(0.5, now + parseFloat(document.getElementById('atk').value));
+  gain.gain.linearRampToValueAtTime(0.5 * parseFloat(document.getElementById('sus').value), now + parseFloat(document.getElementById('atk').value) + parseFloat(document.getElementById('dec').value));
+  osc.connect(gain).connect(filter).connect(audioCtx.destination);
+  osc.start(now);
+  osc.stop(now + parseFloat(document.getElementById('atk').value)+parseFloat(document.getElementById('dec').value)+parseFloat(document.getElementById('rel').value)+0.5);
+});
+
+/* Color Utility */
+function updateColor() {
+  const hue = document.getElementById('hue').value;
+  const sat = document.getElementById('sat').value;
+  const lum = document.getElementById('lum').value;
+  const hex = document.getElementById('color-picker').value;
+  const colorBox = document.getElementById('color-box');
+  const colorInfo = document.getElementById('color-info');
+  const hsl = `hsl(${hue},${sat}%,${lum}%)`;
+  const rgb = hexToRgb(hex);
+  colorBox.style.background = hsl;
+  colorInfo.textContent = `Hex: ${hex} | RGB: ${rgb.r},${rgb.g},${rgb.b} | HSL: ${hue}°,${sat}%,${lum}%`;
+}
+function hexToRgb(hex){
+  let c;
+  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+    c = hex.substring(1).split('');
+    if(c.length==3){
+      c = [c[0],c[0],c[1],c[1],c[2],c[2]];
+    }
+    c = '0x'+c.join('');
+    return {r:(c>>16)&255,g:(c>>8)&255,b:c&255};
+  }
+  return {r:0,g:0,b:0};
+}
+document.querySelectorAll('#color-picker, #hue, #sat, #lum').forEach(el=>{
+  el.addEventListener('input', updateColor);
+});
+updateColor();
+</script>
+</body>
+</html>
